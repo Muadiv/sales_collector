@@ -1,0 +1,6 @@
+pandas
+pyperclip
+glob
+os
+openpyxl
+xlrd

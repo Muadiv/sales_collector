@@ -36,7 +36,7 @@ def main():
         print(formatted_data)
 
         # Copy the formatted data to clipboard in a tab-delimited format
-        final_data.to_clipboard(index=False, header=True, sep='\t')
+        final_data.to_clipboard(index=False, header=False, sep='\t')
 
         # Delete the provider files after successful processing
         delete_provider_files(DOWNLOAD_FOLDER)

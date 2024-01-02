@@ -2,9 +2,28 @@ from pathlib import Path
 
 # List of products
 PRODUCT_LIST = [
-    "Criolla", "Angus", "Cerdo", "Arrabalera", "Pollo", "Jamon y Queso", "Queso", "Humita",
-    "Champiñones", "Espinaca", "Criolla Vegana", "Vegetales", "Milonguita", "Hongos", "Chipá",
-    "Alfajor Negro", "Alfajor Blanco", "Alfajor Maicena", "Chimichurr chico", "Chimichurr grande"
+    "Criolla",
+    "Angus",
+    "Cerdo",
+    "Arrabalera",
+    "Pollo",
+    "Jamon y Queso",
+    "Achalay",
+    "Cordobesa",
+    "Queso",
+    "Humita",
+    "Champiñones",
+    "Espinaca",
+    "Criolla Vegana",
+    "Vegetales",
+    "Milonguita",
+    "Hongos",
+    "Chipá",
+    "Alfajor Negro",
+    "Alfajor Blanco",
+    "Alfajor Maicena",
+    "Chimichurr chico",
+    "Chimichurr grande",
 ]
 
 # Dictionary mapping providers to their file name patterns

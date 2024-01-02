@@ -1,5 +1,5 @@
-import pandas as pd
 import pyperclip
+
 
 def format_and_output(data):
     # Logic to format the data and copy to clipboard

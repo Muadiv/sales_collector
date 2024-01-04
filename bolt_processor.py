@@ -17,6 +17,9 @@ def process_bolt_data(download_folder):
     all_data = []
     for file in files:
         df = pd.read_csv(file)
+        if df.empty:
+            print(f"Skipping empty file: {file}")
+            continue
         df["Date"] = pd.to_datetime(df["Fecha del pedido"], format="%Y-%m-%d %H:%M").dt.date
         df["Location"] = df["Nombre del local"].map(BOLT_LOCATION_MAP)
         df["Provider"] = "Bolt"

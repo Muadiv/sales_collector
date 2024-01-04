@@ -1,5 +1,6 @@
 import glob
 import os
+import traceback
 
 import pandas as pd
 
@@ -42,10 +43,10 @@ def main():
         final_data.to_clipboard(index=False, sep="\t")
 
         # Delete the provider files after successful processing
-        delete_provider_files(DOWNLOAD_FOLDER)
+        # delete_provider_files(DOWNLOAD_FOLDER)
 
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    except Exception:
+        print(f"An error occurred:\n {traceback.format_exc()}")
 
 
 if __name__ == "__main__":

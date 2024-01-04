@@ -12,6 +12,9 @@ def process_wolt_data(download_folder):
             files = glob.glob(f"{download_folder}/{pattern}")
             for file in files:
                 df = pd.read_csv(file)
+                if df.empty:
+                    print(f"Skipping empty file: {file}")
+                    continue
                 df["Date"] = pd.to_datetime(df["Order placed"], format="%d.%m.%y %H:%M").dt.date
                 df["Location"] = location.split("_")[-1]
                 df["Provider"] = "Wolt"

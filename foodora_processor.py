@@ -18,6 +18,9 @@ def process_foodora_data(download_folder):
 
     for file in files:
         df = pd.read_csv(file)
+        if df.empty:
+            print(f"Skipping empty file: {file}")
+            continue
         df["Date"] = pd.to_datetime(df["Order Create Datetime"], format="%Y-%m-%d %H:%M:%S").dt.date
         df["Location"] = df["Provider Name"].map(FOODORA_LOCATION_MAP)
         df["Provider"] = "Foodora"

@@ -22,8 +22,8 @@ PRODUCT_LIST = [
     "Alfajor Negro",
     "Alfajor Blanco",
     "Alfajor Maicena",
-    "Chimichurr chico",
-    "Chimichurr grande",
+    "Chimichurri chico",
+    "Chimichurri grande",
 ]
 
 # Dictionary mapping providers to their file name patterns

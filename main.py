@@ -43,7 +43,7 @@ def main():
         final_data.to_clipboard(index=False, sep="\t")
 
         # Delete the provider files after successful processing
-        # delete_provider_files(DOWNLOAD_FOLDER)
+        delete_provider_files(DOWNLOAD_FOLDER)
 
     except Exception:
         print(f"An error occurred:\n {traceback.format_exc()}")

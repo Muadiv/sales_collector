@@ -5,9 +5,9 @@ import pandas as pd
 from constants import PRODUCT_LIST, PROVIDER_DICT
 
 FOODORA_LOCATION_MAP = {
-    "Bistro La Paisanita": "Zizkov",
-    "La Paisanita Petrovice": "Petrovice",
-    "La Paisanita Dejvice": "Dejvice",
+    "La Paisanita Restaurant": "Petrovice",
+    "La Paisanita Bistro": "Zizkov",
+    "La paisanita - Dejvice": "Dejvice",
 }
 
 
@@ -15,47 +15,41 @@ def process_foodora_data(download_folder):
     pattern = PROVIDER_DICT["Foodora"]
     files = glob.glob(f"{download_folder}/{pattern}")
     all_data = []
-
     for file in files:
         df = pd.read_csv(file)
         if df.empty:
             print(f"Skipping empty file: {file}")
             continue
-        df["Date"] = pd.to_datetime(df["Order Create Datetime"], format="%Y-%m-%d %H:%M:%S").dt.date
-        df["Location"] = df["Provider Name"].map(FOODORA_LOCATION_MAP)
+        df["Date"] = pd.to_datetime(df["Order received at"], format="%Y-%m-%d %H:%M").dt.date
+        df["Location"] = df["Restaurant name"].map(FOODORA_LOCATION_MAP)
         df["Provider"] = "Foodora"
-
-        df["Item Name"] = df["Item Name"].replace(
-            {
-                "ChipÃ¡": "Chipá",
-                "ChampiÃ±ones": "Champiñones",
-                "30 ml": "Chimichurri chico",
-                "12 pcs": "Chipá",
-                "150 ml": "Chimichurri grande",
-            }
-        )
-        df["Item Amount"] = df["Item Amount"].replace({"12 pcs": 2}).astype(int)
-
-        grouped_data = df.groupby(["Date", "Location", "Provider", "Item Name"])["Item Amount"].sum().reset_index()
-
-        pivot_data = grouped_data.pivot_table(
-            index=["Date", "Location", "Provider"], columns="Item Name", values="Item Amount", fill_value=0
-        )
-        pivot_data.reset_index(inplace=True)
-
-        for product in PRODUCT_LIST:
-            if product not in pivot_data.columns:
-                pivot_data[product] = 0
-
-        # Convert all product columns to integers
-        pivot_data[PRODUCT_LIST] = pivot_data[PRODUCT_LIST].astype(int)
-
-        all_data.append(pivot_data)
-
-    combined_data = pd.concat(all_data)
-
-    # Reorder columns to match PRODUCT_LIST
-    final_columns = ["Date", "Location", "Provider"] + PRODUCT_LIST
-    combined_data = combined_data[final_columns]
-
+        item_counts = df["Order Items"].apply(process_items)
+        df = pd.concat([df, item_counts], axis=1)
+        df = df[["Date", "Location", "Provider"] + PRODUCT_LIST]
+        df.fillna(0, inplace=True)
+        all_data.append(df)
+    combined_data = pd.concat(all_data).groupby(["Date", "Location", "Provider"]).sum().reset_index()
     return combined_data
+
+
+def process_items(items_str):
+    items = items_str.split(",")
+    item_counts = {product: 0 for product in PRODUCT_LIST}
+    for item in items:
+        name = " ".join(word for word in item.split() if word.isalpha())
+        if name in PRODUCT_LIST:
+            count = get_count(item, name)
+            item_counts[name] += count
+    return pd.Series(item_counts)
+
+
+def get_count(item_str, product_name):
+    if "Chipá x 12" in item_str:
+        return 2 if product_name == "Chipá" else 0
+    if "Chipá x 6" in item_str:
+        return 1 if product_name == "Chipá" else 0
+    try:
+        count = int("".join(filter(str.isdigit, item_str.split("x")[0])))
+    except ValueError:
+        count = 0
+    return count

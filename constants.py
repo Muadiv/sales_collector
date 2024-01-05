@@ -31,8 +31,8 @@ PROVIDER_DICT = {
     "Wolt_Zizkov": "la-paisanita_purchases_*",
     "Wolt_Petrovice": "la-paisanita-petrovice_purchases_*",
     "Wolt_Dejvice": "la-paisanita-dejvice_purchases_*",
-    "Bolt": "orderDetails.csv",
-    "Foodora": "*_order_items_report_*",
+    "Bolt": "*_order_items_report_*",
+    "Foodora": "orderDetails.csv",
 }
 
 # List of point of sales

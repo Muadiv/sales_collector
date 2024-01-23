@@ -20,11 +20,15 @@ def process_foodora_data(download_folder):
         if df.empty:
             print(f"Skipping empty file: {file}")
             continue
-        df["Date"] = pd.to_datetime(df["Order received at"], format="%Y-%m-%d %H:%M").dt.date
+        df["Order received at"] = df["Order received at"].astype(str)
+        df["Date"] = pd.to_datetime(df["Order received at"], format="%m-%d-%Y %H:%M", errors="coerce").dt.date
+
+        # df["Date"] = pd.to_datetime(df["Order received at"], format="%Y-%m-%d %H:%M").dt.date
         df["Location"] = df["Restaurant name"].map(FOODORA_LOCATION_MAP)
         df["Provider"] = "Foodora"
         item_counts = df["Order Items"].apply(process_items)
         df = pd.concat([df, item_counts], axis=1)
+        df.dropna(subset=["Date"], inplace=True)
         df = df[["Date", "Location", "Provider"] + PRODUCT_LIST]
         df.fillna(0, inplace=True)
         all_data.append(df)

@@ -14,6 +14,7 @@ PRODUCT_LIST = [
     "Humita",
     "Champiñones",
     "Espinaca",
+    "Calabaza",
     "Criolla Vegana",
     "Vegetales",
     "Milonguita",
